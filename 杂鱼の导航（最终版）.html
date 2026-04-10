@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>杂鱼の导航</title>
+
+  <script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=String.prototype.replaceAll"></script>
+
+  <link rel="stylesheet" href="/fonts/lxgwwenkai-regular.css" />
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+  <script defer src="https://cn.vercount.one/js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-weight: bold;
+    }
+
+    :root {
+      --text-main: #4a3d47;
+      --text-sub: #7f6d78;
+      --glass-bg: rgba(255, 255, 255, 0.18);
+      --glass-border: rgba(255, 255, 255, 0.35);
+      --shadow: 0 18px 50px rgba(117, 88, 103, 0.14);
+      --btn-shadow: 0 10px 24px rgba(140, 112, 127, 0.08);
+    }
+
+    html, body {
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 231, 239, 0.92), transparent 30%),
+        radial-gradient(circle at 80% 18%, rgba(248, 238, 255, 0.92), transparent 28%),
+        radial-gradient(circle at 52% 82%, rgba(231, 241, 255, 0.9), transparent 32%),
+        linear-gradient(135deg, #fff9fb 0%, #f9f4fc 48%, #f1f7fd 100%);
+      transition: background .6s ease, color .4s ease;
+    }
+
+    .bg-blur {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .bg-blur span {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.35;
+      animation: float 14s ease-in-out infinite;
+      transition: background .6s ease, opacity .6s ease;
+    }
+
+    .bg-blur span:nth-child(1) {
+      width: 260px;
+      height: 260px;
+      background: #ffd9e8;
+      left: 8%;
+      top: 12%;
+    }
+
+    .bg-blur span:nth-child(2) {
+      width: 320px;
+      height: 320px;
+      background: #eadcff;
+      right: 6%;
+      top: 9%;
+      animation-delay: -4s;
+    }
+
+    .bg-blur span:nth-child(3) {
+      width: 240px;
+      height: 240px;
+      background: #dff0ff;
+      left: 20%;
+      bottom: 8%;
+      animation-delay: -8s;
+    }
+
+    .bg-blur span:nth-child(4) {
+      width: 220px;
+      height: 220px;
+      background: #ffe8f3;
+      right: 18%;
+      bottom: 10%;
+      animation-delay: -2s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+      50% { transform: translateY(-18px) translateX(10px) scale(1.05); }
+    }
+
+    .sakura-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .petal {
+      position: absolute;
+      top: -10vh;
+      width: 16px;
+      height: 10px;
+      background: radial-gradient(circle at 30% 30%, #fff8fb 0%, #ffd4e2 65%, #f8b7cd 100%);
+      border-radius: 70% 100% 70% 100%;
+      opacity: 0.78;
+      box-shadow: 0 0 8px rgba(255, 198, 220, 0.28);
+      animation-name: fall, sway, spin;
+      animation-timing-function: linear, ease-in-out, linear;
+      animation-iteration-count: infinite, infinite, infinite;
+      transform-origin: center center;
+      transition: background .6s ease, box-shadow .6s ease;
+    }
+
+    @keyframes fall {
+      from { transform: translateY(-12vh); }
+      to { transform: translateY(112vh); }
+    }
+
+    @keyframes sway {
+      0%, 100% { margin-left: 0; }
+      50% { margin-left: 42px; }
+    }
+
+    @keyframes spin {
+      from { rotate: 0deg; }
+      to { rotate: 360deg; }
+    }
+
+    .curse-vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity .6s ease;
+      background:
+        radial-gradient(circle at center, transparent 40%, rgba(90, 0, 0, 0.18) 75%, rgba(0, 0, 0, 0.42) 100%);
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 2;
+      width: min(980px, 92%);
+      margin: 40px 0;
+      padding: 34px 28px 26px;
+      border-radius: 30px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px) saturate(145%);
+      -webkit-backdrop-filter: blur(20px) saturate(145%);
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: background .6s ease, border-color .6s ease, box-shadow .6s ease;
+    }
+
+    .poetry-top {
+      margin-bottom: 18px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.22);
+      color: #9b59b6;
+      line-height: 1.9;
+      font-size: 15px;
+      letter-spacing: 1px;
+      transition: all .6s ease;
+    }
+
+    .title {
+      font-size: clamp(32px, 4vw, 44px);
+      color: #4f404c;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 10px rgba(255,255,255,.35);
+      transition: all .6s ease;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      line-height: 1.9;
+      color: var(--text-sub);
+      margin-bottom: 18px;
+      transition: color .6s ease;
+    }
+
+    .divider {
+      width: 100px;
+      height: 1px;
+      margin: 0 auto 22px;
+      background: linear-gradient(to right, transparent, rgba(160,130,145,.55), transparent);
+      transition: background .6s ease;
+    }
+
+    .stats {
+      margin: 0 auto 24px;
+      padding: 12px 16px;
+      width: fit-content;
+      max-width: 100%;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.26);
+      color: #735f69;
+      font-size: 14px;
+      line-height: 1.8;
+      transition: all .6s ease;
+    }
+
+    .stats .pv {
+      color: rgb(252, 109, 13);
+    }
+
+    .stats .uv {
+      color: rgb(109, 180, 13);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 96px;
+      padding: 18px 16px;
+      text-decoration: none;
+      color: #4d3c47;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.38);
+      border-radius: 18px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: var(--btn-shadow);
+      transition: transform .28s ease, background .6s ease, box-shadow .6s ease, border-color .6s ease, color .6s ease, opacity .3s ease, filter .3s ease;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255,255,255,.28), rgba(255,255,255,.06), rgba(255,255,255,.16));
+      pointer-events: none;
+      transition: background .6s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-6px);
+      background: rgba(255,255,255,.28);
+      box-shadow: 0 16px 30px rgba(138, 105, 123, 0.15);
+      border-color: rgba(255,255,255,.55);
+    }
+
+    .btn-title,
+    .btn-desc {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-title {
+      font-size: 17px;
+      margin-bottom: 6px;
+    }
+
+    .btn-desc {
+      font-size: 13px;
+      color: #7d6975;
+      line-height: 1.55;
+      font-weight: 700;
+      transition: color .6s ease;
+    }
+
+    .quote-box {
+      margin-top: 24px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.24);
+      color: #7a6570;
+      line-height: 1.9;
+      font-size: 14px;
+      transition: all .6s ease;
+    }
+
+    .curse-trigger {
+      color: #b30000;
+      cursor: pointer;
+      text-shadow: 0 0 6px rgba(179, 0, 0, 0.35);
+      transition: all .25s ease;
+      position: relative;
+      user-select: none;
+    }
+
+    .curse-trigger:hover {
+      color: #ff1e1e;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.55);
+    }
+
+    .curse-trigger::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -2px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(170,0,0,.8), transparent);
+    }
+
+    .today-poetry {
+      margin-top: 16px;
+      color: #ff69b4;
+      font-size: 15px;
+      line-height: 1.8;
+      transition: color .6s ease;
+    }
+
+    .footer {
+      margin-top: 18px;
+      font-size: 12px;
+      color: rgba(95, 80, 90, 0.7);
+      letter-spacing: 1px;
+      transition: color .6s ease;
+    }
+
+    .click-word {
+      position: fixed;
+      z-index: 99999;
+      pointer-events: none;
+      font-size: 18px;
+      color: #ff6fae;
+      text-shadow: 0 2px 8px rgba(255,255,255,.45);
+      animation: clickFloat 1.4s ease-out forwards;
+      user-select: none;
+      white-space: nowrap;
+      transition: color .4s ease;
+    }
+
+    @keyframes clickFloat {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -10px) scale(.85);
+      }
+      15% {
+        opacity: 1;
+        transform: translate(-50%, -20px) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -90px) scale(1.08);
+      }
+    }
+
+    .heart {
+      width: 18px;
+      height: 18px;
+      position: fixed;
+      transform: rotate(45deg);
+      pointer-events: none;
+      z-index: 99998;
+      animation: heartFloat 1.2s ease-out forwards;
+      opacity: .9;
+      transition: filter .6s ease;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      border-radius: 50%;
+      background: inherit;
+    }
+
+    .heart::before {
+      left: -9px;
+    }
+
+    .heart::after {
+      top: -9px;
+    }
+
+    @keyframes heartFloat {
+      0% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) rotate(45deg) scale(.8);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -120px) rotate(45deg) scale(1.2);
+      }
+    }
+
+    body.cursed {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(60, 0, 0, 0.35), transparent 28%),
+        radial-gradient(circle at 80% 18%, rgba(20, 0, 0, 0.4), transparent 28%),
+        radial-gradient(circle at 50% 82%, rgba(40, 0, 0, 0.35), transparent 30%),
+        linear-gradient(135deg, #120b0d 0%, #1b1014 45%, #140c10 100%);
+      animation: cursedShake 0.18s infinite;
+    }
+
+    body.cursed .wrap {
+      background: rgba(30, 18, 22, 0.52);
+      border: 1px solid rgba(130, 20, 30, 0.28);
+      box-shadow: 0 0 40px rgba(120, 0, 0, 0.16), 0 18px 50px rgba(0, 0, 0, 0.28);
+    }
+
+    body.cursed .wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 30px;
+      pointer-events: none;
+      box-shadow:
+        inset 0 0 0 1px rgba(160, 20, 20, 0.18),
+        inset 0 0 30px rgba(120, 0, 0, 0.12),
+        0 0 18px rgba(120, 0, 0, 0.12);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(120,0,0,0.28) 0 8px, transparent 9px),
+        radial-gradient(circle at 16% 0%, rgba(140,0,0,0.24) 0 10px, transparent 11px),
+        radial-gradient(circle at 28% 0%, rgba(110,0,0,0.22) 0 7px, transparent 8px),
+        radial-gradient(circle at 44% 0%, rgba(130,0,0,0.26) 0 9px, transparent 10px),
+        radial-gradient(circle at 63% 0%, rgba(120,0,0,0.22) 0 8px, transparent 9px),
+        radial-gradient(circle at 78% 0%, rgba(160,0,0,0.24) 0 10px, transparent 11px),
+        radial-gradient(circle at 92% 0%, rgba(130,0,0,0.2) 0 7px, transparent 8px);
+      opacity: 1;
+    }
+
+    body.cursed .poetry-top,
+    body.cursed .quote-box,
+    body.cursed .stats {
+      background: rgba(40, 20, 24, 0.36);
+      border-color: rgba(150, 40, 50, 0.22);
+    }
+
+    body.cursed .title {
+      color: #d9c7cb;
+      text-shadow: 0 0 14px rgba(120, 0, 0, 0.18);
+    }
+
+    body.cursed .subtitle,
+    body.cursed .quote-box,
+    body.cursed .footer,
+    body.cursed .btn-desc,
+    body.cursed .stats,
+    body.cursed .btn,
+    body.cursed .btn-title,
+    body.cursed .poetry-top {
+      color: #d0c1c6;
+    }
+
+    body.cursed .btn {
+      background: rgba(45, 20, 26, 0.4);
+      border-color: rgba(140, 30, 40, 0.24);
+      box-shadow: 0 10px 24px rgba(80, 0, 0, 0.14);
+      filter: grayscale(0.25) brightness(0.82);
+      opacity: 0.82;
+    }
+
+    body.cursed .btn::before {
+      background: linear-gradient(120deg, rgba(120,0,0,.18), rgba(30,0,0,.08), rgba(100,0,0,.14));
+    }
+
+    body.cursed .btn:hover {
+      background: rgba(60, 20, 28, 0.5);
+      box-shadow: 0 14px 30px rgba(120, 0, 0, 0.22);
+      border-color: rgba(200, 40, 40, 0.35);
+      transform: none;
+    }
+
+    body.cursed .btn.disabled-link {
+      pointer-events: none;
+      user-select: none;
+    }
+
+    body.cursed .today-poetry {
+      color: #d66a7c;
+    }
+
+    body.cursed .divider {
+      background: linear-gradient(to right, transparent, rgba(150, 20, 40, .7), transparent);
+    }
+
+    body.cursed .bg-blur span:nth-child(1),
+    body.cursed .bg-blur span:nth-child(4) {
+      background: #5a0f1b;
+      opacity: 0.25;
+    }
+
+    body.cursed .bg-blur span:nth-child(2) {
+      background: #2f0a11;
+      opacity: 0.25;
+    }
+
+    body.cursed .bg-blur span:nth-child(3) {
+      background: #3a111a;
+      opacity: 0.22;
+    }
+
+    body.cursed .petal {
+      background: radial-gradient(circle at 30% 30%, #ffd6d6 0%, #a81d32 55%, #4e0615 100%);
+      box-shadow: 0 0 10px rgba(120, 0, 0, 0.25);
+    }
+
+    body.cursed .click-word {
+      color: #ff4b5c !important;
+      text-shadow: 0 0 10px rgba(120, 0, 0, 0.28);
+    }
+
+    body.cursed .heart {
+      filter: saturate(70%) brightness(70%);
+    }
+
+    body.cursed .curse-vignette {
+      opacity: 1;
+      animation: cursePulse 2.2s infinite;
+    }
+
+    body.cursed,
+    body.cursed * {
+      cursor: crosshair !important;
+    }
+
+    @keyframes cursedShake {
+      0%   { transform: translate(0px, 0px) rotate(0deg); }
+      20%  { transform: translate(-0.5px, 0.8px) rotate(-0.15deg); }
+      40%  { transform: translate(0.8px, -0.6px) rotate(0.12deg); }
+      60%  { transform: translate(-0.8px, 0.4px) rotate(-0.1deg); }
+      80%  { transform: translate(0.6px, 0.7px) rotate(0.1deg); }
+      100% { transform: translate(0px, 0px) rotate(0deg); }
+    }
+
+    @keyframes cursePulse {
+      0%, 100% { opacity: 0.72; }
+      50% { opacity: 0.92; }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        align-items: flex-start;
+      }
+
+      .wrap {
+        margin: 20px 0;
+        padding: 24px 16px 20px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .poetry-top,
+      .quote-box,
+      .stats {
+        font-size: 13px;
+      }
+
+      .title {
+        letter-spacing: 1px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blur">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="sakura-layer" id="sakura"></div>
+  <div class="curse-vignette"></div>
+
+  <main class="wrap">
+    <div class="poetry-top" id="poetry-top-text">
+      最是人间留不住，朱颜辞镜花辞树
+      <span style="display:inline-block;width:24px;"></span>
+      人生若只如初见，何事秋风悲画扇
+    </div>
+
+    <h1 class="title" id="main-title">杂鱼の导航</h1>
+    <p class="subtitle" id="main-subtitle">
+      风轻，花落，云也安静。<br>
+      请选择你想进入的网站。
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="stats">
+      <span id="stats-label-pv">总访问数</span>
+      <span id="vercount_value_site_pv" class="pv">Loading</span>
+      &nbsp;&nbsp;
+      <span id="stats-label-uv">总访问人数</span>
+      <span id="vercount_value_site_uv" class="uv">Loading</span>
+    </div>
+
+    <section class="grid">
+      <a class="btn" href="https://newyear.xn--6qq80winj2x7b.icu" target="_blank">
+        <span class="btn-title">新年快乐！</span>
+        <span class="btn-desc">一个轻松喜庆的小页面</span>
+      </a>
+
+      <a class="btn" href="https://alist.xn--6qq80winj2x7b.icu" target="_blank">
+        <span class="btn-title">内网穿透</span>
+        <span class="btn-desc">仅在需要的时候开启</span>
+      </a>
+
+      <a class="btn" href="https://komari.xn--6qq80winj2x7b.icu" target="_blank">
+        <span class="btn-title">Komari 监控</span>
+        <span class="btn-desc">状态监控与服务查看</span>
+      </a>
+
+      <a class="btn" href="https://onelast.xn--6qq80winj2x7b.icu" target="_blank">
+        <span class="btn-title">卢浮宫画风生成</span>
+        <span class="btn-desc">图片风格转换与生成</span>
+      </a>
+
+      <a class="btn" href="https://share.xn--6qq80winj2x7b.icu" target="_blank">
+        <span class="btn-title">文件快递柜</span>
+        <span class="btn-desc">临时分享与文件中转</span>
+      </a>
+
+      <a class="btn" href="https://zako.xn--6qq80winj2x7b.icu" target="_blank">
+        <span class="btn-title">辛普森字符画</span>
+        <span class="btn-desc">字符的转换与生成</span>
+      </a>
+    </section>
+
+    <div class="quote-box" id="quote-box-text">
+      纵使生活不如意，桃花依旧笑春风。<br>
+      有些页面用来展示，有些页面需要
+      <span id="curse-trigger" class="curse-trigger">隐藏</span>。
+    </div>
+
+    <div class="today-poetry">
+      <span id="jinrishici-sentence">正在加载今日诗词....</span>
+    </div>
+
+    <div class="footer" id="footer-text">Sakura drifts through a quiet spring.</div>
+  </main>
+
+  <script>
+    const CURSE_DURATION = 60 * 1000;
+    const CURSE_STORAGE_KEY = "cursedUntil";
+    const CURSE_TEXT = "fy4er5ehrzveiwklzun4okxcnrt2gg6rj3cdymblb5m2jnfxl2uhfaqd";
+
+    const sakuraLayer = document.getElementById("sakura");
+    const petalCount = 60;
+
+    for (let i = 0; i < petalCount; i++) {
+      const petal = document.createElement("span");
+      petal.className = "petal";
+
+      const left = Math.random() * 100;
+      const delay = Math.random() * 18;
+      const duration = 9 + Math.random() * 12;
+      const sway = 3 + Math.random() * 5;
+      const spin = 4 + Math.random() * 7;
+      const scale = 0.55 + Math.random() * 1.05;
+      const opacity = 0.35 + Math.random() * 0.45;
+
+      petal.style.left = left + "vw";
+      petal.style.opacity = opacity;
+      petal.style.transform = `scale(${scale})`;
+      petal.style.animationDuration = `${duration}s, ${sway}s, ${spin}s`;
+      petal.style.animationDelay = `-${delay}s, -${delay / 2}s, -${delay / 3}s`;
+
+      sakuraLayer.appendChild(petal);
+    }
+
+    const normalClickWords = [
+      "春风", "初见", "花落", "心动", "桃花", "温柔",
+      "土豆泥", "ciallo~", "咕咕嘎嘎", "小摆子",
+      "晚安", "想你", "平安", "喜欢你", "雑魚", "别点啦"
+    ];
+
+    const cursedClickWords = [
+      "不详", "异变", "低语", "噩兆", "侵染", "腐坏",
+      "坠落", "空洞", "失温", "它在看你", "不要回头",
+      "已经开始了", "晚了", "别再靠近", "你逃不掉", "看见了吗"
+    ];
+
+    let currentClickWords = [...normalClickWords];
+    let curseTimer = null;
+
+    const heartColors = [
+      "#ff6fae", "#ff8fb1", "#f7a8c4", "#ffb7d5", "#e7a1ff", "#ffc0cb"
+    ];
+
+    const curseTrigger = document.getElementById("curse-trigger");
+    const poetry = document.getElementById("jinrishici-sentence");
+    const allNavLinks = Array.from(document.querySelectorAll(".grid .btn"));
+
+    const domMap = {
+      title: document.getElementById("main-title"),
+      subtitle: document.getElementById("main-subtitle"),
+      poetryTop: document.getElementById("poetry-top-text"),
+      quoteBox: document.getElementById("quote-box-text"),
+      footer: document.getElementById("footer-text"),
+      statsPvLabel: document.getElementById("stats-label-pv"),
+      statsUvLabel: document.getElementById("stats-label-uv"),
+      btnTitles: Array.from(document.querySelectorAll(".btn-title")),
+      btnDescs: Array.from(document.querySelectorAll(".btn-desc"))
+    };
+
+    const normalTexts = {
+      title: domMap.title.innerHTML,
+      subtitle: domMap.subtitle.innerHTML,
+      poetryTop: domMap.poetryTop.innerHTML,
+      quoteBox: domMap.quoteBox.innerHTML,
+      footer: domMap.footer.innerHTML,
+      statsPvLabel: domMap.statsPvLabel.textContent,
+      statsUvLabel: domMap.statsUvLabel.textContent,
+      btnTitles: domMap.btnTitles.map(el => el.textContent),
+      btnDescs: domMap.btnDescs.map(el => el.textContent),
+      poetryDynamic: poetry ? poetry.textContent : ""
+    };
+
+    const cursedTexts = {
+      title: "不详の入口",
+      subtitle: "不要停留。<br>不要凝视。不要试图理解。",
+      poetryTop: "它们并未离去<span style='display:inline-block;width:24px;'></span>只是你终于看见了它们",
+      quoteBox: "门已经开了。<br>有些东西不该被找到，有些东西已经找到你。",
+      footer: "Something drifts through the quiet dark.",
+      statsPvLabel: "窥视次数",
+      statsUvLabel: "沾染人数",
+      btnTitles: [
+        "不要过去",
+        "入口已封",
+        "它正在注视你",
+        "不要上传记忆",
+        "不要留下痕迹",
+        "已经太晚了"
+      ],
+      btnDescs: [
+        "你会带回不该带回的东西",
+        "你知道不该来的",
+        "它也知道你来过",
+        "画布后面的并不是画",
+        "快递柜里只有回声",
+        "谁才是所谓的字符"
+      ],
+      poetryDynamic: "您已经沾染上不详。"
+    };
+
+    function applyCursedTexts() {
+      domMap.title.innerHTML = cursedTexts.title;
+      domMap.subtitle.innerHTML = cursedTexts.subtitle;
+      domMap.poetryTop.innerHTML = cursedTexts.poetryTop;
+      domMap.quoteBox.innerHTML = cursedTexts.quoteBox;
+      domMap.footer.innerHTML = cursedTexts.footer;
+      domMap.statsPvLabel.textContent = cursedTexts.statsPvLabel;
+      domMap.statsUvLabel.textContent = cursedTexts.statsUvLabel;
+
+      domMap.btnTitles.forEach((el, i) => {
+        el.textContent = cursedTexts.btnTitles[i] || "不要靠近";
+      });
+
+      domMap.btnDescs.forEach((el, i) => {
+        el.textContent = cursedTexts.btnDescs[i] || "它仍在这里";
+      });
+
+      if (poetry) {
+        poetry.textContent = cursedTexts.poetryDynamic;
+      }
+    }
+
+    function restoreNormalTexts() {
+      domMap.title.innerHTML = normalTexts.title;
+      domMap.subtitle.innerHTML = normalTexts.subtitle;
+      domMap.poetryTop.innerHTML = normalTexts.poetryTop;
+      domMap.quoteBox.innerHTML = normalTexts.quoteBox;
+      domMap.footer.innerHTML = normalTexts.footer;
+      domMap.statsPvLabel.textContent = normalTexts.statsPvLabel;
+      domMap.statsUvLabel.textContent = normalTexts.statsUvLabel;
+
+      domMap.btnTitles.forEach((el, i) => {
+        el.textContent = normalTexts.btnTitles[i] || "";
+      });
+
+      domMap.btnDescs.forEach((el, i) => {
+        el.textContent = normalTexts.btnDescs[i] || "";
+      });
+
+      if (poetry) {
+        poetry.textContent = "不详暂时退去了。";
+      }
+    }
+
+    function disableNavLinks() {
+      allNavLinks.forEach(link => {
+        if (!link.classList.contains("disabled-link")) {
+          link.classList.add("disabled-link");
+          link.setAttribute("data-href", link.getAttribute("href") || "");
+          link.removeAttribute("href");
+          link.setAttribute("aria-disabled", "true");
+          link.setAttribute("tabindex", "-1");
+        }
+      });
+    }
+
+    function enableNavLinks() {
+      allNavLinks.forEach(link => {
+        const oldHref = link.getAttribute("data-href");
+        if (oldHref) {
+          link.setAttribute("href", oldHref);
+        }
+        link.classList.remove("disabled-link");
+        link.removeAttribute("aria-disabled");
+        link.removeAttribute("tabindex");
+      });
+    }
+
+    function enterCursedMode(untilTimestamp) {
+      document.body.classList.add("cursed");
+      currentClickWords = [...cursedClickWords];
+      disableNavLinks();
+      applyCursedTexts();
+
+      const left = untilTimestamp - Date.now();
+      if (left > 0) {
+        clearTimeout(curseTimer);
+        curseTimer = setTimeout(() => {
+          exitCursedMode();
+        }, left);
+      }
+    }
+
+    function exitCursedMode() {
+      document.body.classList.remove("cursed");
+      currentClickWords = [...normalClickWords];
+      enableNavLinks();
+      restoreNormalTexts();
+      localStorage.removeItem(CURSE_STORAGE_KEY);
+    }
+
+    const savedCursedUntil = Number(localStorage.getItem(CURSE_STORAGE_KEY) || 0);
+    if (savedCursedUntil > Date.now()) {
+      enterCursedMode(savedCursedUntil);
+    } else {
+      localStorage.removeItem(CURSE_STORAGE_KEY);
+    }
+
+    window.addEventListener("load", function () {
+      const isCursed = document.body.classList.contains("cursed");
+      swal({
+        title: isCursed ? "您已经沾染上不详" : "❤️杂鱼の公告❤️",
+        text: isCursed
+          ? "它已经留在这里了。\n所有入口已被封闭，直到不详退去。"
+          : "国外vps，夜晚访问速度可能会比较慢！\n\n" +
+            "🌟温馨提示🌟\n" +
+            "① 如果速度过慢可以尝试开梯子访问\n" +
+            "② 已经套了CF了，请不要攻击我 ┭┮﹏┭┮\n" +
+            "③ 纵使生活不如意，桃花依旧笑春风",
+        icon: isCursed ? "warning" : "success",
+        button: isCursed ? "……" : "开始视奸！！！"
+      });
+    });
+
+    if (curseTrigger) {
+      curseTrigger.addEventListener("click", async function (e) {
+        e.stopPropagation();
+        const cursedUntil = Date.now() + CURSE_DURATION;
+
+        try {
+          await navigator.clipboard.writeText(CURSE_TEXT);
+        } catch (err) {
+          const input = document.createElement("textarea");
+          input.value = CURSE_TEXT;
+          document.body.appendChild(input);
+          input.select();
+          document.execCommand("copy");
+          document.body.removeChild(input);
+        }
+
+        localStorage.setItem(CURSE_STORAGE_KEY, String(cursedUntil));
+        enterCursedMode(cursedUntil);
+
+        swal({
+          title: "您已经沾染上不详",
+          text: "通往地下室的密钥已经复制到剪贴板。\n所有入口将被封闭一分钟。",
+          icon: "warning",
+          button: "……"
+        });
+      });
+    }
+
+    document.addEventListener("click", function (e) {
+      const btn = e.target.closest(".grid .btn");
+
+      if (document.body.classList.contains("cursed") && btn) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        swal({
+          title: "入口已封闭",
+          text: "不详仍在蔓延，请一分钟后再试。",
+          icon: "warning",
+          button: "……"
+        });
+        return;
+      }
+
+      createClickWord(e.clientX, e.clientY);
+      createHearts(e.clientX, e.clientY);
+    });
+
+    function createClickWord(x, y) {
+      const word = document.createElement("span");
+      word.className = "click-word";
+      word.innerText = currentClickWords[Math.floor(Math.random() * currentClickWords.length)];
+      word.style.left = x + "px";
+      word.style.top = y + "px";
+      word.style.color = document.body.classList.contains("cursed")
+        ? ["#ff5a5a", "#d8344d", "#b3122d", "#d96a6a"][Math.floor(Math.random() * 4)]
+        : heartColors[Math.floor(Math.random() * heartColors.length)];
+
+      document.body.appendChild(word);
+      setTimeout(() => word.remove(), 1400);
+    }
+
+    function createHearts(x, y) {
+      for (let i = 0; i < 2; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.style.left = x + (Math.random() * 24 - 12) + "px";
+        heart.style.top = y + (Math.random() * 24 - 12) + "px";
+        heart.style.background = document.body.classList.contains("cursed")
+          ? ["#8b0f23", "#a3152b", "#c21d35", "#6b0817"][Math.floor(Math.random() * 4)]
+          : heartColors[Math.floor(Math.random() * heartColors.length)];
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1200);
+      }
+    }
+  </script>
+</body>
+</html>
