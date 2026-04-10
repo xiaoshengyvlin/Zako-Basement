@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZaKo❤️~</title>
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --bg-soft: #f8fbff;
+      --card: rgba(255,255,255,0.92);
+      --text: #111827;
+      --text-soft: #6b7280;
+      --border: #e5e7eb;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #16a34a;
+      --success-hover: #15803d;
+      --secondary: #475569;
+      --secondary-hover: #334155;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      --danger-text: #991b1b;
+      --ok-bg: #ecfdf5;
+      --ok-border: #bbf7d0;
+      --ok-text: #166534;
+      --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.08);
+      --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.06);
+      --radius-xl: 22px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 30%),
+        radial-gradient(circle at top right, rgba(22, 163, 74, 0.06), transparent 25%),
+        linear-gradient(180deg, #f9fbff 0%, var(--bg) 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 34px 16px 60px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.1);
+      color: #1d4ed8;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: 44px;
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 0 auto;
+      max-width: 760px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-soft);
+    }
+
+    .notice {
+      margin: 24px 0 30px;
+      padding: 16px 18px;
+      border: 1px solid #dbeafe;
+      background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 100%);
+      color: #1e3a8a;
+      border-radius: 16px;
+      line-height: 1.75;
+      font-size: 14px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .grid {
+      display: grid;
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      padding: 24px;
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    .section-subtitle {
+      margin: 0 0 18px;
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .hidden { display: none; }
+
+    .message {
+      margin-bottom: 18px;
+      padding: 15px 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+      box-shadow: var(--shadow-md);
+    }
+
+    .message.error {
+      border: 1px solid var(--danger-border);
+      background: var(--danger-bg);
+      color: var(--danger-text);
+    }
+
+    .message.success {
+      border: 1px solid var(--ok-border);
+      background: var(--ok-bg);
+      color: var(--ok-text);
+    }
+
+    .upload-zone {
+      border: 2px dashed #93c5fd;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fbfdff 0%, #f1f7ff 100%);
+      padding: 38px 22px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s ease;
+      margin-bottom: 14px;
+    }
+
+    .upload-zone:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+      background: linear-gradient(180deg, #f8fbff 0%, #eaf3ff 100%);
+    }
+
+    .upload-zone.dragover {
+      border-color: var(--primary);
+      background: #dbeafe;
+    }
+
+    .upload-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .muted {
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .file-status {
+      margin-top: 12px;
+      color: #374151;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .preview-panel {
+      margin-top: 20px;
+    }
+
+    .preview-image {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: white;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      align-items: end;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    .field input[type="number"],
+    .field select {
+      width: 100%;
+      padding: 12px 13px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.95);
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: all .2s ease;
+    }
+
+    .field input[type="number"]:focus,
+    .field select:focus {
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+    }
+
+    .checkbox-wrap {
+      margin-top: 4px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .checkbox-wrap input {
+      margin-top: 2px;
+      transform: scale(1.08);
+    }
+
+    .tip {
+      margin-top: 16px;
+      padding: 14px 15px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fafafa;
+      color: #374151;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    button, .link-btn {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+      box-shadow: 0 8px 18px rgba(22, 163, 74, 0.22);
+    }
+
+    .btn-success:hover {
+      background: var(--success-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: var(--secondary-hover);
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: .72;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none;
+    }
+
+    pre {
+      margin: 0;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      line-height: 0.95;
+      font-size: 12px;
+      white-space: pre;
+      overflow-x: auto;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+      font-family: "DejaVu Sans Mono", "Noto Sans Mono", monospace;
+    }
+
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .footer-note {
+      margin-top: 26px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .top-right-link {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 9999;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
+      transition: all .2s ease;
+    }
+
+    .top-right-link:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        padding-top: 24px;
+      }
+
+      .hero h1 {
+        font-size: 34px;
+      }
+
+      .card {
+        padding: 18px;
+        border-radius: 18px;
+      }
+
+      .upload-zone {
+        padding: 28px 16px;
+      }
+
+      .top-right-link {
+        top: 12px;
+        right: 12px;
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="top-right-link" href="https://onelast.xn--6qq80winj2x7b.icu/index.html">
+    卢浮宫画风生成器
+  </a>
+
+  <div class="container">
+    <div class="hero">
+      <div class="hero-badge">高精度字符图工具</div>
+      <h1>辛普森字符图 生成器</h1>
+      <p>
+        上传图片后，先生成预览，再生成高精度字符图。
+        支持文本导出，也支持生成图片用于社交平台分享。
+      </p>
+    </div>
+
+    <div class="notice">
+      <strong>模型推荐：</strong>
+      普通图片优先尝试 <strong>u2net</strong>；辛普森、动漫、卡通角色优先尝试 <strong>isnet-anime</strong>。
+    </div>
+
+    <div id="error-box" class="message error hidden"></div>
+    <div id="success-box" class="message success hidden"></div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>1. 上传图片</h2>
+        <p class="section-subtitle">支持点击选择、拖拽上传，或直接粘贴图片。</p>
+
+        <input type="hidden" id="session-id" value="{{ session_id }}">
+        <input type="file" id="image-input" accept="image/*" style="display:none;">
+
+        <div id="upload-zone" class="upload-zone">
+          <div class="upload-title">点击、拖拽或粘贴图片到这里</div>
+          <div class="muted">支持从文件夹拖入，也支持直接 Ctrl+V 粘贴图片</div>
+          <div id="file-status" class="file-status">未选择新图片</div>
+        </div>
+
+        <div id="original-preview-panel" class="preview-panel hidden">
+          <h3>原图预览</h3>
+          <img id="original-preview-image" class="preview-image" src="" alt="original preview">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>2. 模型与抠图</h2>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="model-select">模型</label>
+            <select id="model-select">
+              {% for value, label in model_options %}
+                <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="field">
+            <label>后处理</label>
+            <div class="checkbox-wrap">
+              <input type="checkbox" id="post-process-mask">
+              <span>优化抠图边缘，减少碎边和小噪点</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="model-tip" class="tip hidden"></div>
+
+        <div class="actions">
+          <button id="preview-btn" type="button" class="btn-primary">生成抠图预览</button>
+        </div>
+      </div>
+
+      <div id="preview-box" class="card hidden">
+        <h2>3. 抠图预览</h2>
+        <img id="preview-image" class="preview-image" src="" alt="preview">
+      </div>
+
+      <div id="braille-form-box" class="card hidden">
+        <h2>4. 生成字符图</h2>
+        <p class="section-subtitle">调整参数后生成高精度字符图，并导出分享图片。</p>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="width-input">宽度</label>
+            <input type="number" id="width-input" value="100">
+          </div>
+
+          <div class="field">
+            <label for="threshold-input">阈值</label>
+            <input type="number" id="threshold-input" value="110">
+          </div>
+
+          <div class="field">
+            <label for="ratio-input">比例</label>
+            <input type="number" id="ratio-input" step="0.05" value="1.45">
+          </div>
+        </div>
+
+        <div class="tip">
+          宽度越大，细节越多；阈值越低，背景通常越少；比例越大，图像越高。
+        </div>
+
+        <div class="actions">
+          <button id="braille-btn" type="button" class="btn-success">生成字符图</button>
+        </div>
+      </div>
+
+      <div id="braille-result-box" class="card hidden">
+        <div class="result-top">
+          <h2 style="margin:0;">5. 字符图结果</h2>
+          <div class="actions" style="margin-top:0;">
+            <a id="download-link" class="link-btn btn-secondary" href="#" target="_blank">下载 TXT</a>
+            <a id="image-link" class="link-btn btn-primary" href="#" download>下载图片</a>
+          </div>
+        </div>
+
+        <pre id="braille-output"></pre>
+
+        <div id="image-result-panel" class="preview-panel hidden">
+          <h3>分享图片预览</h3>
+          <img id="image-result" class="preview-image" src="" alt="rendered result">
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      上传图片 → 生成抠图预览 → 调整参数 → 生成字符图 → 下载文本或分享图片
+    </div>
+  </div>
+
+  <script>
+    const sessionIdInput = document.getElementById("session-id");
+    const uploadZone = document.getElementById("upload-zone");
+    const imageInput = document.getElementById("image-input");
+    const fileStatus = document.getElementById("file-status");
+    const originalPreviewPanel = document.getElementById("original-preview-panel");
+    const originalPreviewImage = document.getElementById("original-preview-image");
+
+    const modelSelect = document.getElementById("model-select");
+    const postProcessMask = document.getElementById("post-process-mask");
+    const modelTip = document.getElementById("model-tip");
+
+    const previewBtn = document.getElementById("preview-btn");
+    const brailleBtn = document.getElementById("braille-btn");
+
+    const previewBox = document.getElementById("preview-box");
+    const previewImage = document.getElementById("preview-image");
+
+    const brailleFormBox = document.getElementById("braille-form-box");
+    const brailleResultBox = document.getElementById("braille-result-box");
+    const brailleOutput = document.getElementById("braille-output");
+    const downloadLink = document.getElementById("download-link");
+    const imageLink = document.getElementById("image-link");
+    const imageResultPanel = document.getElementById("image-result-panel");
+    const imageResult = document.getElementById("image-result");
+
+    const widthInput = document.getElementById("width-input");
+    const thresholdInput = document.getElementById("threshold-input");
+    const ratioInput = document.getElementById("ratio-input");
+
+    const errorBox = document.getElementById("error-box");
+    const successBox = document.getElementById("success-box");
+
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.classList.remove("hidden");
+      successBox.classList.add("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showSuccess(msg) {
+      successBox.textContent = msg;
+      successBox.classList.remove("hidden");
+      errorBox.classList.add("hidden");
+    }
+
+    function clearMessage() {
+      errorBox.classList.add("hidden");
+      successBox.classList.add("hidden");
+    }
+
+    function updateFileStatus(file) {
+      fileStatus.textContent = file ? ("已选择新图片：" + file.name) : "未选择新图片";
+    }
+
+    function showOriginalPreview(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        originalPreviewImage.src = e.target.result;
+        originalPreviewPanel.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function setFileToInput(file) {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      imageInput.files = dt.files;
+      updateFileStatus(file);
+      showOriginalPreview(file);
+    }
+
+    function updateModelTip(model) {
+      const tips = {
+        "u2net": "适合大多数普通图片，作为默认首选。",
+        "isnet-anime": "适合辛普森、动漫、卡通角色等简洁人物。",
+        "isnet-general-use": "适合想试更强通用主体提取的情况。",
+        "u2net_human_seg": "可作为额外对比项。"
+      };
+      const text = tips[model] || "";
+      if (text) {
+        modelTip.textContent = text;
+        modelTip.classList.remove("hidden");
+      } else {
+        modelTip.classList.add("hidden");
+      }
+    }
+
+    async function parseResponse(res) {
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        return await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error("服务器返回的不是 JSON：\n" + text.slice(0, 500));
+      }
+    }
+
+    updateModelTip(modelSelect.value);
+    modelSelect.addEventListener("change", () => updateModelTip(modelSelect.value));
+
+    uploadZone.addEventListener("click", () => imageInput.click());
+
+    imageInput.addEventListener("change", () => {
+      const file = imageInput.files && imageInput.files[0];
+      if (file) {
+        updateFileStatus(file);
+        showOriginalPreview(file);
+      }
+    });
+
+    uploadZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      uploadZone.classList.add("dragover");
+    });
+
+    uploadZone.addEventListener("dragleave", () => {
+      uploadZone.classList.remove("dragover");
+    });
+
+    uploadZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove("dragover");
+      const file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file && file.type.startsWith("image/")) {
+        setFileToInput(file);
+      }
+    });
+
+    document.addEventListener("paste", (e) => {
+      const items = e.clipboardData && e.clipboardData.items;
+      if (!items) return;
+
+      for (const item of items) {
+        if (item.type && item.type.startsWith("image/")) {
+          const blob = item.getAsFile();
+          if (blob) {
+            const ext = blob.type.split("/")[1] || "png";
+            const file = new File([blob], "pasted-image." + ext, { type: blob.type });
+            setFileToInput(file);
+            break;
+          }
+        }
+      }
+    });
+
+    previewBtn.addEventListener("click", async () => {
+      clearMessage();
+
+      const fd = new FormData();
+      fd.append("session_id", sessionIdInput.value);
+      fd.append("model", modelSelect.value);
+      if (postProcessMask.checked) fd.append("post_process_mask", "on");
+
+      const file = imageInput.files && imageInput.files[0];
+      if (file) fd.append("image", file);
+
+      previewBtn.disabled = true;
+      previewBtn.textContent = "生成中...";
+
+      try {
+        const res = await fetch("/api/preview", {
+          method: "POST",
+          body: fd
+        });
+
+        const data = await parseResponse(res);
+
+        if (!res.ok || !data.ok) {
+          showError(data.error || "生成预览失败");
+          return;
+        }
+
+        sessionIdInput.value = data.session_id;
+        previewImage.src = data.preview_image + "?t=" + Date.now();
+        previewBox.classList.remove("hidden");
+
+        originalPreviewImage.src = data.original_image + "?t=" + Date.now();
+        originalPreviewPanel.classList.remove("hidden");
+
+        widthInput.value = data.width ?? 100;
+        thresholdInput.value = data.threshold ?? 110;
+        ratioInput.value = data.ratio ?? 1.45;
+
+        brailleFormBox.classList.remove("hidden");
+        brailleResultBox.classList.add("hidden");
+        updateModelTip(data.model);
+
+        showSuccess("抠图预览生成成功");
+      } catch (err) {
+        showError(err.message || "请求失败，请稍后再试。");
+        console.error(err);
+      } finally {
+        previewBtn.disabled = false;
+        previewBtn.textContent = "生成抠图预览";
+      }
+    });
+
+    brailleBtn.addEventListener("click", async () => {
+      clearMessage();
+
+      const fd = new FormData();
+      fd.append("session_id", sessionIdInput.value);
+      fd.append("model", modelSelect.value);
+      fd.append("width", widthInput.value);
+      fd.append("threshold", thresholdInput.value);
+      fd.append("ratio", ratioInput.value);
+
+      brailleBtn.disabled = true;
+      brailleBtn.textContent = "生成中...";
+
+      try {
+        const res = await fetch("/api/braille", {
+          method: "POST",
+          body: fd
+        });
+
+        const data = await parseResponse(res);
+
+        if (!res.ok || !data.ok) {
+          showError(data.error || "生成字符图失败");
+          return;
+        }
+
+        brailleOutput.textContent = data.braille_text || "";
+        downloadLink.href = data.download_url || "#";
+
+        if (data.image_url) {
+          const imageUrl = data.image_url + "?t=" + Date.now();
+          imageLink.href = imageUrl;
+          imageResult.src = imageUrl;
+          imageResultPanel.classList.remove("hidden");
+        }
+
+        brailleResultBox.classList.remove("hidden");
+        showSuccess("字符图生成成功");
+      } catch (err) {
+        showError(err.message || "请求失败，请稍后再试。");
+        console.error(err);
+      } finally {
+        brailleBtn.disabled = false;
+        brailleBtn.textContent = "生成字符图";
+      }
+    });
+  </script>
+</body>
+</html>
